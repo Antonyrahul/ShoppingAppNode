@@ -11,7 +11,7 @@ app.use(cors())
 dbName = "productDB"
 dbCollection = "products"
 app.get('/', function (req, res) {
-    res.redirect("http://localhost:4200")
+  
    console.log("Connection from angular")
    //mongodb+srv://antonyrahul96:<password>@cluster0-nl7jd.mongodb.net/test?retryWrites=true&w=majority
 /*mongodbclient.connect(url, function (err, client) {
