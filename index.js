@@ -13,7 +13,7 @@ dbCollection = "products"
 app.get('/', function (req, res) {
   
    console.log("Connection from angular")
-   res.redirect("http://localhost:4200")
+   
    //"mongodb://localhost:27017/productDB"
    //mongodb+srv://antonyrahul96:<password>@cluster0-nl7jd.mongodb.net/test?retryWrites=true&w=majority
 /*mongodbclient.connect(url, function (err, client) {
@@ -82,6 +82,7 @@ app.post('/displayproducts', function (req, res) {
 })
 
 app.post('/addproduct', function (req, res) {
+    res.redirect("http://localhost:4200")
     console.log(req.body);
     mongodbclient.connect(url, function (err, client) {
         if (err) throw err;
