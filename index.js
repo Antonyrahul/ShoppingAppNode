@@ -4,7 +4,7 @@ const cors = require('cors')
 
 const bodyparser = require('body-parser');
 const mongodbclient = require('mongodb');
-url = "mongodb://localhost:27017/productDB"
+url = "mongodb+srv://antonyrahul96:antonyrahul96@cluster0-nl7jd.mongodb.net/test?retryWrites=true&w=majority"
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(cors())
@@ -13,6 +13,7 @@ dbCollection = "products"
 app.get('/', function (req, res) {
   
    console.log("Connection from angular")
+   //"mongodb://localhost:27017/productDB"
    //mongodb+srv://antonyrahul96:<password>@cluster0-nl7jd.mongodb.net/test?retryWrites=true&w=majority
 /*mongodbclient.connect(url, function (err, client) {
     if (err) throw err;
@@ -182,3 +183,14 @@ app.listen(process.env.PORT, function () {
     return this.http.post('http://localhost:4123/verifyproduct',data)
   }
   */
+ /*
+ 
+const MongoClient = require('mongodb').MongoClient;
+const uri = "mongodb+srv://antonyrahul96:<password>@cluster0-nl7jd.mongodb.net/test?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { useNewUrlParser: true });
+client.connect(err => {
+  const collection = client.db("test").collection("devices");
+  // perform actions on the collection object
+  client.close();
+});
+*/
