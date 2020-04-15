@@ -46,7 +46,7 @@ app.get('/', function (req, res) {
 
 app.post('/displayproducts', function (req, res) {
     console.log(req.body);
-    mongodbclient.connect(url,{ useNewUrlParser: true }, function (err, client) {
+    mongodbclient.connect(url, function (err, client) {
         if (err) throw err;
         var db = client.db(dbName);
      
@@ -82,7 +82,7 @@ app.post('/displayproducts', function (req, res) {
 })
 
 app.post('/addproduct', function (req, res) {
-    res.redirect("http://localhost:4200")
+   
     console.log(req.body);
     mongodbclient.connect(url, function (err, client) {
         if (err) throw err;
