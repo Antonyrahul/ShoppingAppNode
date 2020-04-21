@@ -4,12 +4,19 @@ const cors = require('cors')
 
 const bodyparser = require('body-parser');
 const mongodbclient = require('mongodb');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+const jwt =  require("jsonwebtoken");
 url = "mongodb+srv://antonyrahul96:antonyrahul96@cluster0-nl7jd.mongodb.net/test?retryWrites=true&w=majority"
+productdburl = "mongodb://localhost:27017/productDB";
+usersdburl = "mongodb://localhost:27017/userDB";
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(cors())
 dbName = "productDB"
 dbCollection = "products"
+userDB = "shoppinguserDB"
+usersCollection = "userscollection"
 app.get('/', function (req, res) {
   
    console.log("Connection from angular")
@@ -42,6 +49,92 @@ app.get('/', function (req, res) {
 
    // client.close();
 });*/
+})
+
+app.post('/registeruser', function (req, res) {
+    console.log(req.body);
+    mongodbclient.connect(url, function (err, client) {
+        if (err) throw err;
+        var db = client.db(userDB);
+        bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
+            if (err) throw err;
+            var userData = {
+                email: req.body.email,
+                firstname: req.body.firstname,
+                lastname: req.body.lastname,
+                password: hash
+                
+            }
+            db.collection(usersCollection).insertOne(userData, function (err, data) {
+                if (err) throw err;
+                client.close();
+                res.json({
+                    message: "saved"
+                })
+            })
+            // Store hash in your password DB.
+        });
+
+       // client.close();
+    });
+
+})
+
+app.post('/loginuser', function (req, res) {
+    console.log(req.body);
+    mongodbclient.connect(url, function (err, client) {
+        if (err) throw err;
+        var db = client.db(userDB);
+
+            db.collection(usersCollection).findOne({email:req.body.email}, function (err, data) {
+                if(data)
+                {
+                if (err) throw err;
+                bcrypt.compare(req.body.password, data.password, function(err, result) {
+                    if(err) throw err;
+                   
+                    if(result == true)
+                    {
+                    console.log("logged in")
+                    var jwtToken = jwt.sign({id:data.id},'qazwsxedcrfv')
+                    client.close();
+                    res.status(200).json({
+                        message: "LOGGED IN",
+                        jwttoken: jwtToken,
+                        name : data.firstname,
+                        email:data.email,
+                        status :200
+                    });
+                    
+
+                }
+                    else{
+                        client.close();
+                        res.status(401).json({
+                            message: "Incorrect password"
+                        })
+                    
+                    console.log("wrong creds")
+                    }
+                });
+
+                
+                
+            }
+            else
+            {
+                client.close();
+                res.status(401).json({
+                    message : "Incorrect username"
+                })
+            }
+            })
+            // Store hash in your password DB.
+        
+
+
+    });
+
 })
 
 app.post('/displayproducts', function (req, res) {
@@ -168,7 +261,7 @@ app.post('/verifyproduct', function (req, res) {
     });
 
 })
-
+//process.env.PORT
 app.listen(process.env.PORT, function () {
 
     console.log("listening on port 4123");
